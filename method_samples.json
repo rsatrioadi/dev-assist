@@ -1,0 +1,42 @@
+[
+    [
+        "com.fsck.k9.fragment.MessageListFragment.onExpunge()",
+        "public void onExpunge() {\r\n    if (currentFolder != null) {\r\n        onExpunge(account, currentFolder.name);\r\n    }\r\n}"
+    ],
+    [
+        "com.fsck.k9.provider.EmailProvider.getThreadedMessages(java.lang.String,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String)",
+        "protected android.database.Cursor getThreadedMessages(java.lang.String accountUuid, final java.lang.String[] projection, final java.lang.String selection, final java.lang.String[] selectionArgs, final java.lang.String sortOrder) {\r\n    com.fsck.k9.Account account = getAccount(accountUuid);\r\n    com.fsck.k9.mailstore.LockableDatabase database = getDatabase(account);\r\n    try {\r\n        return database.execute(false, new com.fsck.k9.mailstore.LockableDatabase.DbCallback<android.database.Cursor>() {\r\n            @java.lang.Override\r\n            public android.database.Cursor doDbWork(android.database.sqlite.SQLiteDatabase db) throws com.fsck.k9.mailstore.LockableDatabase.WrappedException, com.fsck.k9.mailstore.UnavailableStorageException {\r\n                java.lang.StringBuilder query = new java.lang.StringBuilder();\r\n                query.append(\"SELECT \");\r\n                boolean first = true;\r\n                for (java.lang.String columnName : projection) {\r\n                    if (!first) {\r\n                        query.append(\",\");\r\n                    } else {\r\n                        first = false;\r\n                    }\r\n                    final java.lang.String aggregationFunc = com.fsck.k9.provider.EmailProvider.THREAD_AGGREGATION_FUNCS.get(columnName);\r\n                    if (com.fsck.k9.provider.EmailProvider.MessageColumns.ID.equals(columnName)) {\r\n                        query.append(((\"m.\" + com.fsck.k9.provider.EmailProvider.MessageColumns.ID) + \" AS \") + com.fsck.k9.provider.EmailProvider.MessageColumns.ID);\r\n                    } else if (aggregationFunc != null) {\r\n                        query.append(\"a.\");\r\n                        query.append(columnName);\r\n                        query.append(\" AS \");\r\n                        query.append(columnName);\r\n                    } else {\r\n                        query.append(columnName);\r\n                    }\r\n                }\r\n                query.append(\" FROM (\");\r\n                createThreadedSubQuery(projection, selection, query);\r\n                query.append(\") a \");\r\n                query.append((((((((((((((((((((((((\"JOIN \" + com.fsck.k9.provider.EmailProvider.THREADS_TABLE) + \" t \") + \"ON (t.\") + com.fsck.k9.provider.EmailProvider.ThreadColumns.ROOT) + \" = a.thread_root) \") + \"JOIN \") + com.fsck.k9.provider.EmailProvider.MESSAGES_TABLE) + \" m \") + \"ON (m.\") + com.fsck.k9.provider.EmailProvider.MessageColumns.ID) + \" = t.\") + com.fsck.k9.provider.EmailProvider.ThreadColumns.MESSAGE_ID) + \" AND \") + \"m.\") + com.fsck.k9.provider.EmailProvider.InternalMessageColumns.EMPTY) + \"=0 AND \") + \"m.\") + com.fsck.k9.provider.EmailProvider.InternalMessageColumns.DELETED) + \"=0 AND \") + \"m.\") + com.fsck.k9.provider.EmailProvider.MessageColumns.DATE) + \" = a.\") + com.fsck.k9.provider.EmailProvider.MessageColumns.DATE) + \") \");\r\n                if (com.fsck.k9.helper.Utility.arrayContainsAny(projection, ((java.lang.Object[]) (com.fsck.k9.provider.EmailProvider.FOLDERS_COLUMNS)))) {\r\n                    query.append(((((((\"JOIN \" + com.fsck.k9.provider.EmailProvider.FOLDERS_TABLE) + \" f \") + \"ON (m.\") + com.fsck.k9.provider.EmailProvider.MessageColumns.FOLDER_ID) + \" = f.\") + com.fsck.k9.provider.EmailProvider.FolderColumns.ID) + \") \");\r\n                }\r\n                query.append(\" GROUP BY \" + com.fsck.k9.provider.EmailProvider.ThreadColumns.ROOT);\r\n                if (!android.text.TextUtils.isEmpty(sortOrder)) {\r\n                    query.append(\" ORDER BY \");\r\n                    query.append(com.fsck.k9.search.SqlQueryBuilder.addPrefixToSelection(com.fsck.k9.provider.EmailProvider.FIXUP_AGGREGATED_MESSAGES_COLUMNS, \"a.\", sortOrder));\r\n                }\r\n                return db.rawQuery(query.toString(), selectionArgs);\r\n            }\r\n        });\r\n    } catch (com.fsck.k9.mailstore.UnavailableStorageException e) {\r\n        throw new java.lang.RuntimeException(\"Storage not available\", e);\r\n    } catch (com.fsck.k9.mail.MessagingException e) {\r\n        throw new java.lang.RuntimeException(\"messaging exception\", e);\r\n    }\r\n}"
+    ],
+    [
+        "com.fsck.k9.FontSizes.getAccountDescription()",
+        "public int getAccountDescription() {\r\n    return accountDescription;\r\n}"
+    ],
+    [
+        "com.fsck.k9.power.DeviceIdleManager$NoOpDeviceIdleManager.registerReceiver()",
+        "@java.lang.Override\r\npublic void registerReceiver() {\r\n    // Do nothing\r\n}"
+    ],
+    [
+        "com.fsck.k9.activity.MessageList.remoteSearchStarted()",
+        "@java.lang.Override\r\npublic void remoteSearchStarted() {\r\n    // Remove action button for remote search\r\n    configureMenu(mMenu);\r\n}"
+    ],
+    [
+        "com.fsck.k9.mailstore.LocalMessage.equals(java.lang.Object)",
+        "@java.lang.Override\r\npublic boolean equals(java.lang.Object o) {\r\n    if (this == o) {\r\n        return true;\r\n    }\r\n    if ((o == null) || (getClass() != o.getClass())) {\r\n        return false;\r\n    }\r\n    if (!super.equals(o)) {\r\n        return false;\r\n    }\r\n    // distinguish by account uuid, in addition to what Message.equals() does above\r\n    java.lang.String thisAccountUuid = getAccountUuid();\r\n    java.lang.String thatAccountUuid = ((com.fsck.k9.mailstore.LocalMessage) (o)).getAccountUuid();\r\n    return thisAccountUuid != null ? thisAccountUuid.equals(thatAccountUuid) : thatAccountUuid == null;\r\n}"
+    ],
+    [
+        "com.fsck.k9.Account.setFolderPushMode(com.fsck.k9.Account$FolderMode)",
+        "public synchronized boolean setFolderPushMode(com.fsck.k9.Account.FolderMode pushMode) {\r\n    com.fsck.k9.Account.FolderMode oldPushMode = folderPushMode;\r\n    folderPushMode = pushMode;\r\n    return pushMode != oldPushMode;\r\n}"
+    ],
+    [
+        "com.fsck.k9.provider.MessageProvider$SubjectExtractor.com.fsck.k9.provider.MessageProvider$SubjectExtractor()",
+        "SubjectExtractor() {\r\n}"
+    ],
+    [
+        "com.fsck.k9.activity.compose.RecipientMvpView.showCcUncompletedError()",
+        "public void showCcUncompletedError() {\r\n    ccView.setError(ccView.getContext().getString(R.string.compose_error_incomplete_recipient));\r\n}"
+    ],
+    [
+        "com.fsck.k9.activity.Accounts$SimpleDialog.retain()",
+        "@java.lang.Override\r\npublic boolean retain() {\r\n    if (mDialog != null) {\r\n        mDialog.dismiss();\r\n        mDialog = null;\r\n        return true;\r\n    }\r\n    return false;\r\n}"
+    ]
+]
